@@ -20,8 +20,16 @@ Most game engines and GPUs use single precision floating-point values.
 If we used double precisions, it would double the memory size of numbers.
 
 ### Moving Graphs
+_Surface Shader_
+does lighting calculations. Doesn't work for the URP.
+* Fallback: a default shader that will be chosen if all subshader fails.
+* pragma: compiler directive
+#pragma surface ConfigureSurface Standard fullforwardshadows
+instructs the shader to generate a surface shader with **Standard** lighting and **full support for shadows**.
+* saturate : clamps all components to 0 - 1 
+
 _Universal Render Pipeline(URP)_
-scriptable render pipeline. Has a shader graph.
+scriptable render pipeline. Has a shader graph. Cannot be modified, though.
 
 _Mesh_
 * Vector3[] vertices
