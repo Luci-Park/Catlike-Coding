@@ -51,6 +51,7 @@ Unity render shadows as textures, these are sampled to create shadows. Because t
 Less distance, better and less shadow.
 Cascades uses multiple maps based on distance so nearby shadows have a higher resolution than those far away.
 
+
 #### Lecture
 - Why we're changing the return value from float to vector3
     - => Because currently, we're tied to the 2D relm. To go to the 3D relm, we need a vector return value
