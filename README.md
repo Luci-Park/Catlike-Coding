@@ -45,6 +45,15 @@ Ranges between(0, 0) and (1, 1)
 _Tangents_
 Where normal maps are defined. It's like the 3D space that flows around the surface of an object.
 Uses 4 dimension to represent in/out direction.
+
+_Shadow Cascade, Distance_
+Unity render shadows as textures, these are sampled to create shadows. Because the texture has a fixed resolution, they are more blocky if they have to cover a bigger area.
+Less distance, better and less shadow.
+Cascades uses multiple maps based on distance so nearby shadows have a higher resolution than those far away.
+
+#### Lecture
+- Why we're changing the return value from float to vector3
+    - => Because currently, we're tied to the 2D relm. To go to the 3D relm, we need a vector return value
 ### Fractals
 
 ## Pseudorandom Noise
