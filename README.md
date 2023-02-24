@@ -51,10 +51,22 @@ Unity render shadows as textures, these are sampled to create shadows. Because t
 Less distance, better and less shadow.
 Cascades uses multiple maps based on distance so nearby shadows have a higher resolution than those far away.
 
-
 #### Lecture
 - Why we're changing the return value from float to vector3
     - => Because currently, we're tied to the 2D relm. To go to the 3D relm, we need a vector return value
+- Game Quality
+    - FPS : Frames per Second
+    - batches : draw calls sent to the GPU
+        - depth pass, shadows included 
+        - URP doesn't use a separate depth pass for directional shadows
+        - dynamic batching : Commands CPU to dynamically combine small meshes to a larger one, therefore reducing drawcall. (요즘은 GPU 성능이 좋아져서 dynamic batching이 더 걸릴 수 있다.)
+    - GPU Instancing
+        - renders multiple copies of a mesh with the same material in a single draw call
+        - optimizes cases where same meshes come multiple times.
+    - Unity's Built in render pipline renders each point for every lighting.
+        - Therefore if more lights and points are added, GPU Instancing may not be your best option.
+    - Use a Profiler.
+    
 ### Fractals
 
 ## Pseudorandom Noise

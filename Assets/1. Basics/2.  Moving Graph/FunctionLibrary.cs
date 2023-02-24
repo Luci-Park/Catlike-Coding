@@ -8,20 +8,39 @@ public static class FunctionLibrary
 {
     public delegate Vector3 Function(float u, float v, float t);
 
-    public enum FunctionName { Wave, MultiWave, Ripple, Sphere, ScalingSphere, VerticalBandsSphere, HorizontalBandSphere, TwistingSphere, Torus }
+    public enum FunctionName { Wave, MultiWave, Ripple, Sphere, ScalingSphere, VerticalBandsSphere, HorizontalBandSphere, TwistingSphere, Torus, Size }
 
     static Function[] functions = { Wave, MultiWave, Ripple, Sphere, ScalingSphere, VerticalBandsSphere, HorizontalBandSphere, TwistingSphere, Torus };
 
-public static Function GetFunction(int index)
+    public static Function GetFunction(int index)
     {
         return functions[index];
     }
-
+    public static FunctionName GetRandomFunctionNameExcept(FunctionName name)
+    {
+        int choice;
+        do
+        {
+            choice = Random.Range(0, (int)FunctionName.Size);
+        } while (choice == (int)name);
+        return (FunctionName)choice;
+    }
     public static Function GetFunction(FunctionName function)
     {
         return functions[(int) function];
     }
 
+    public static FunctionName GetNextFunctionName(FunctionName name)
+    {
+        int idx = (int)name;
+        idx = (idx + 1) % (int)FunctionName.Size;
+        return (FunctionName)idx;
+    }
+
+    public static Vector3 Morph(float u, float v, float t, Function from, Function to, float progress)
+    {
+        return Vector3.LerpUnclamped(from(u,v,t), to(u, v, t), SmoothStep(0f, 1f, progress));
+    }
 
     public static Vector3 Wave(float u, float v, float t)
     {
