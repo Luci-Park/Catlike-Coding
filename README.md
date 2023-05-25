@@ -68,12 +68,22 @@ Cascades uses multiple maps based on distance so nearby shadows have a higher re
     - Use a Profiler.
     
 ### Fractals
+_Instantiate_
+instantiate(this) duplicates the gameobject in their current state, including its child objects.
+
+_SetParent(Transform parent, bool worldPositionStays)_
+`worldpositionstays`가 `true`이면 `child`는 본인의 `worldposition`을 유지하고
+`false`이면 `localposition`이 있을 시 새로운 `parent`에 대해 `localposition`이 유지된다. 
+
+_Hierarchy_
+유니티는 `recursive`한 hierarchy에서 효율적으로 움직이지 못한다.
+각 오브젝트 update -> object-to-world 행렬 계산 -> culling -> rendering
+
 
 ## Pseudorandom Noise
 ### Hashing
 _IJob_
-
-
+can be used to schedule a single job that runs in parallel to other jobs and the main thread.
 _IJobFor_
 Interface for scheduling items. We use it here to fill hashes.
 ```cs
