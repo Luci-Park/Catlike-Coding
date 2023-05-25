@@ -77,8 +77,9 @@ _SetParent(Transform parent, bool worldPositionStays)_
 
 _Hierarchy_
 유니티는 `recursive`한 hierarchy에서 효율적으로 움직이지 못한다.
-각 오브젝트 update -> object-to-world 행렬 계산 -> culling -> rendering
-
+각 오브젝트 update -> object-to-world 행렬 계산 -> culling -> rendering 과정을 거치기 때문.
+가능하면 `flat`하게 하면 효율이 조금은 좋아진다.
+여기에서 `flat`이란 각 게임오브젝트에서 행동하게 하지 않고 한 클래스에서 다른 클래스들을 컨트롤 하게 하는 것이다.
 
 ## Pseudorandom Noise
 ### Hashing

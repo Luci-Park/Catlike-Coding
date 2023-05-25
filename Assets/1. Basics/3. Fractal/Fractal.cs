@@ -1,42 +1,91 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Fractal : MonoBehaviour
 {
     [SerializeField, Range(1, 8)]
-    int depth = 4;
-    // Start is called before the first frame update
-    void Start()
+    int depth;
+    [SerializeField] Mesh mesh;
+    [SerializeField] Material material;
+    struct FractalPart
     {
-        name = "Fractal " + depth;
-        if (depth <= 1)
-            return;
-        Fractal childA = CreateChild(Vector3.up, Quaternion.identity);
-        Fractal childB = CreateChild(Vector3.right, Quaternion.Euler(0f, 0f, -90f));
-        Fractal childC = CreateChild(Vector3.left, Quaternion.Euler(0f, 0f, 90f));
-        Fractal childD = CreateChild(Vector3.forward, Quaternion.Euler(90f, 0f, 0f));
-        Fractal childE = CreateChild(Vector3.back, Quaternion.Euler(-90f, 0f, 0f));
+        public Vector3 direction;
+        public Quaternion rotation;
+        public Transform transform;
+    };
 
-        childA.transform.SetParent(transform, false);
-        childB.transform.SetParent(transform, false);
-        childC.transform.SetParent(transform, false);
-        childD.transform.SetParent(transform, false);
-        childE.transform.SetParent(transform, false);
-    }
+    static Vector3[] directions =
+    { Vector3.up, Vector3.right, Vector3.left, Vector3.forward, Vector3.back };
 
-    Fractal CreateChild(Vector3 direction, Quaternion rotation)
+    static Quaternion[] rotations = {
+        Quaternion.identity,
+        Quaternion.Euler(0f, 0f, -90f), Quaternion.Euler(0f, 0f, 90f),
+        Quaternion.Euler(90f, 0f, 0f), Quaternion.Euler(-90f, 0f, 0f)
+    };
+
+    FractalPart[][] parts;
+
+    private void Awake()
     {
-        Fractal child = Instantiate(this);
-        child.depth = depth - 1;
-        child.transform.localPosition = 0.75f * direction;
-        child.transform.localRotation = rotation;
-        child.transform.localScale = 0.5f * Vector3.one;
-        return child;
+        parts = new FractalPart[depth][];
+        for(int i = 0, length = 1; i < parts.Length; i++, length *= 5)
+        {
+            parts[i] = new FractalPart[length];
+        }
+        float scale = 1f;
+        parts[0][0] = CreatePart(0, 0, scale);
+        for (int li = 1; li < parts.Length; li++)
+        {
+            scale *= 0.5f;
+            for(int fpi = 0; fpi < parts[li].Length; fpi+= 5)
+            {
+                for (int ci = 0; ci < 5; ci++)
+                {
+                    parts[li][fpi + ci] = CreatePart(li, ci, scale);
+                }
+            }
+        }
     }
 
     private void Update()
     {
-        transform.Rotate(0f, 22.5f * Time.deltaTime, 0f);
+        Quaternion deltaRotation = Quaternion.Euler(0f, 22.5f * Time.deltaTime, 0f);
+
+        parts[0][0].rotation = deltaRotation;
+        parts[0][0].transform.localRotation = parts[0][0].rotation;
+
+        for(int li = 1; li < parts.Length; li++)
+        {
+            for(int fpi = 0; fpi < parts[li].Length; fpi++)
+            {
+                Transform parentTransform = parts[li - 1][fpi / 5].transform;
+                FractalPart part = parts[li][fpi];
+                part.rotation *= deltaRotation;
+                part.transform.localRotation = parentTransform.localRotation * part.rotation;
+                part.transform.localPosition =
+                    parentTransform.localPosition +
+                    parentTransform.localRotation *
+                        (1.5f * part.transform.localScale.x * part.direction);
+                parts[li][fpi] = part;
+            }
+        }
+    }
+
+    FractalPart CreatePart(int levelIndex, int childIndex, float scale)
+    {
+        var go = new GameObject("Fractal Part " + levelIndex + " C" + childIndex);
+        go.transform.SetParent(transform, false);
+        go.transform.localScale = scale * Vector3.one;
+        go.AddComponent<MeshFilter>().mesh = mesh;
+        go.AddComponent<MeshRenderer>().material = material;
+        return new FractalPart
+        { 
+            direction = directions[childIndex],
+            rotation = rotations[childIndex],
+            transform = go.transform
+        };
+
     }
 }

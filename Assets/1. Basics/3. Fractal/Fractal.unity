@@ -155,7 +155,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 589847bc64e2ca54883464c3151924f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  depth: 4
+  depth: 6
+  mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  material: {fileID: 2100000, guid: 76094144ef36d1f4e8b8f1ce1d20d99e, type: 2}
 --- !u!135 &640640457
 SphereCollider:
   m_ObjectHideFlags: 0
